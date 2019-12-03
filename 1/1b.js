@@ -11,6 +11,9 @@ At first, a module of mass 1969 requires 654 fuel. Then, this fuel requires 216 
 The fuel required by a module of mass 100756 and its fuel is: 33583 + 11192 + 3728 + 1240 + 411 + 135 + 43 + 12 + 2 = 50346.
 What is the sum of the fuel requirements for all of the modules on your spacecraft when also taking into account the mass of the added fuel? (Calculate the fuel requirements for each module separately, then add them all up at the end.)
 */
+
+const data = require("./data.js");
+
 const calculateFuelCost = (weight) => {
     const toReturn = Math.floor(weight / 3) - 2;
     return (toReturn <= 0) ? 0 : toReturn + calculateFuelCost(toReturn);
