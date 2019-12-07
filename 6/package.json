@@ -1,0 +1,6 @@
+{
+    "scripts": {
+        "start": "tsc .\\6a.ts && node .\\6a.js",
+        "start-b": "tsc .\\6b.ts && node .\\6b.js"
+    }
+}
