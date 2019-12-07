@@ -20,6 +20,9 @@ Find the input noun and verb that cause the program to produce the output 196907
 */
 
 const data = require("./data.js");
+let numOfCycles = 0;
+const globalResult = 19690720;
+const MAX_POSSIBLE_VALUE = 99;
 
 const add = (data, operandPosition, operandPosition2, resultPosition) => {
   data[resultPosition] = data[operandPosition] + data[operandPosition2];
@@ -47,8 +50,6 @@ const process = (data, positionFrom) => {
   }
 }
 
-let numOfCycles = 0;
-
 const start = (noun, verb) => {
   let dataCopy = Array.from(data);
   dataCopy[1] = noun;
@@ -58,18 +59,16 @@ const start = (noun, verb) => {
   return dataCopy[0];
 }
 
-const result = 19690720;
-
-// @returns correct/found result or result for upper bound of the range
-const testRange = (rangeStart, rangeSize, inResult) => {
+// @returns correct/found result or result for upper bound of the tested range
+const testRange = (rangeStart, rangeSize, targetResult) => {
     // console.log(`testing range ${rangeStart}, size ${rangeSize}`);
     let currentResult;
     for (i = rangeStart; i < rangeStart+rangeSize; i++){
         for (j = 0; j < 100; j++){
             currentResult = start(i,j);
-            if (currentResult === inResult){
+            if (currentResult === targetResult){
                 console.log(`Result noun: ${i}, result verb: ${j}`);
-                return result;
+                return currentResult;
             }
         }
     }
@@ -77,23 +76,23 @@ const testRange = (rangeStart, rangeSize, inResult) => {
 }
 
 // m . n . log(n)
-const binarySearch = (inRangeSize) => {
+const binarySearch = (inRangeSize, targetResult) => {
     try {
         let rangeStart = 0;
         let minRangeStart = 0;
-        let maxRangeStart = 90;
         const rangeSize = inRangeSize;
+        let maxRangeStart = MAX_POSSIBLE_VALUE - inRangeSize + 1;
         let currentResult;
         // Binary search
         while (1) {
             // Always storing either the final result, or the maximum result from the testing range
-            currentResult = testRange(rangeStart, rangeSize, result);
+            currentResult = testRange(rangeStart, rangeSize, targetResult);
             // If result is what we searched for, we're done
-            if (currentResult === result){
+            if (currentResult === targetResult){
                 break;
             }
             // If maximum result is larger, all of the tested values were also larger (they were all tested and not === to result)
-            if (currentResult > result){
+            if (currentResult > targetResult){
                 // If results were larger despite searching in lowest possible range, it's an error
                 if (rangeStart <= 0) {
                     throw new Error(`Result not found, input too low`);
@@ -101,7 +100,7 @@ const binarySearch = (inRangeSize) => {
                 maxRangeStart = rangeStart;
                 rangeStart = Math.round((minRangeStart + rangeStart) / 2);
             // If maximum result is lower, all of the tested values were also lower (obviously)
-            } else if (currentResult < result) {
+            } else if (currentResult < targetResult) {
                 // If results were lower despite searching in maximum possible range, it's an error
                 if (rangeStart === maxRangeStart) {
                     throw new Error(`Result not found, input too large`);
@@ -120,7 +119,7 @@ const naive = () => {
     try {
         for (i = 0; i < 100; i++){
             for (j = 0; j < 100; j++){
-                if (start(i,j) === result){
+                if (start(i,j) === globalResult){
                     console.log(`Result noun: ${i}, result verb: ${j}`);
                     break;
                 }
@@ -131,6 +130,6 @@ const naive = () => {
     }
 }
 
-binarySearch(5);
+binarySearch(5, globalResult);
 
-// console.log(`Number of performed cycles/computations: ${numOfCycles}`);
+console.log(`Number of performed cycles/computations: ${numOfCycles}`);
