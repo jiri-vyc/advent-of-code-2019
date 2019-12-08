@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "start": "node .\\8a.js",
+        "start-b": "node .\\8b.js",
+        "build-start": "tsc && node .\\8a.js",
+        "build-start-b": "tsc && node .\\8b.js",
+        "build": "tsc"
+    }
+}
